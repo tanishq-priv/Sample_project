@@ -35,5 +35,5 @@ RUN python manage.py collectstatic --noinput || true
 EXPOSE 8000
 
 # 10. Start the Django application using Gunicorn as the production WSGI HTTP Server.
-# We bind dynamically to ${PORT:-8000} so Render or Docker containers can pass custom port env vars.
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+# Automatically run database migrations before starting gunicorn server.
+CMD sh -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"
